@@ -2,6 +2,7 @@
 
 #include<string>
 #include<vector>
+
 #include<opencv2/core.hpp>
 
 std::vector<cv::Mat> readImagesInFolder(const std::string& path); 
