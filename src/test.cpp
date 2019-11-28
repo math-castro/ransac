@@ -6,5 +6,6 @@
 using namespace std;
 
 int main() {
-    ransac<TestModel, TestMeasurement, TestComputeModel>(vector<TestMeasurement>());
+  ransac<TestModel, TestMeasurement, TestComputeModel, TestComputeError>(
+      vector<TestMeasurement>(), 0, 0, 0);
 }
