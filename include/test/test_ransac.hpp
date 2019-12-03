@@ -3,8 +3,8 @@
 #include <vector>
 #include <iostream>
 
-#include "base_compute_model.hpp"
-#include "base_compute_error.hpp"
+#include "base/base_compute_model.hpp"
+#include "base/base_compute_error.hpp"
 
 struct TestModel {};
 struct TestMeasurement {};

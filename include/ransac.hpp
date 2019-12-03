@@ -17,7 +17,7 @@ template <class Model, class Measurement, class ComputeModel,
 Model ransac(const std::vector<Measurement>& measurements, int n, int k, double t) {
   using namespace std;
 
-  if(n > measurements.size()) {
+  if(n > (int)measurements.size()) {
     throw invalid_argument("The number of measurements cannot be smaller than n");
   }
 

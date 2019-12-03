@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base_compute_model.hpp"
+#include "base/base_compute_model.hpp"
 #include "homography.hpp"
 
 using namespace std;
