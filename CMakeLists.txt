@@ -10,6 +10,8 @@ add_compile_options(-Wall -Wextra)
 # OpenCV
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
+# Eigen
+find_package(Eigen3 3.3 REQUIRED)
 # source files
 file(GLOB_RECURSE SRC_FILES "src/*.cpp")
 list(FILTER SRC_FILES EXCLUDE REGEX "main.cpp")

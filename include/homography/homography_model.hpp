@@ -1,11 +1,12 @@
 #pragma once
 
 #include <opencv2/opencv.hpp>
+#include <Eigen/Dense>
 
 class HomographyModel {
  public:
-  HomographyModel(const cv::Matx33f& matrix);
+  HomographyModel(const Eigen::Matrix3d& matrix);
   cv::Point2f operator()(cv::Point2f p) const;
  private:
-  const cv::Matx33f _matrix;
+  const Eigen::Matrix3d _matrix;
 };
