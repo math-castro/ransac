@@ -4,6 +4,7 @@
 #include<random>
 #include<algorithm>
 #include<exception>
+#include<iostream>
 
 /*
 *ComputeModel: should derive from BaseComputeModel with the same Model and Measurement
@@ -37,14 +38,16 @@ Model ransac(const std::vector<Measurement>& measurements, int n, int k, double 
     // compute number of inliers
     int cur_inliers = 0;
     for(const Measurement &measurement : measurements)
-      if(compute_error(model, measurement) < t)
+      if(compute_error(model, measurement) < t) {
         cur_inliers++;
+      }
     // if has more inliers, set as best model
     if(cur_inliers > n_inliers) {
       best_model = model;
       n_inliers = cur_inliers;
     }
   }
+
 
   return best_model;
 }
