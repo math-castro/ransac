@@ -31,7 +31,18 @@ Model ransac(const std::vector<Measurement>& measurements, int n, int k, double 
   for(int i = 0; i < k; i++) {
     // create a sampling
     vector<Measurement> sampling;
-    sample(measurements.begin(), measurements.end(), back_inserter(sampling), n, rng);
+    // sample(measurements.begin(), measurements.end(), back_inserter(sampling), n, rng);
+	int n0 = n;
+	int k0 = k;
+	while (n0 > 0) {
+		//#include <stdlib.h>
+		float p = rand() / (float) RAND_MAX; // float in [0,1[
+		if (p < n0/ (float) k0) {
+			sampling.push_back(measurements[k0]);
+			n0--;
+		}
+		k0--;
+	}
     // compute model
     Model model = compute_model(sampling);
     // compute number of inliers
