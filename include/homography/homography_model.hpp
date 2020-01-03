@@ -7,6 +7,7 @@ class HomographyModel {
  public:
   HomographyModel(const Eigen::Matrix3d& matrix);
   cv::Point2f operator()(cv::Point2f p) const;
+  void print() const;
  private:
   const Eigen::Matrix3d _matrix;
 };

@@ -34,7 +34,7 @@ HomographyModel ComputeHomographyModel::operator()(const vector<HomographyMeasur
   }
   MatrixXd ATA = A.transpose()*A;
   SelfAdjointEigenSolver<MatrixXd> solver(ATA);
-  auto h = solver.eigenvectors.col(0);
+  auto h = solver.eigenvectors().col(0);
 
   Matrix3d H;
   H(0,0) = h(0);
