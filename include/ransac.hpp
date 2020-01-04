@@ -11,7 +11,7 @@
 int compute_iterations(double p, double r, int s) {
   const int INF = 0x3f3f3f3f;
   if(fabs(r) < 1e-9) return INF;
-  return log(1-p)/log(1-pow(r,s));
+  return ceil(log(1-p)/log(1-pow(r,s)))+1e-9;
 }
 
 /*
@@ -43,6 +43,7 @@ Model ransac(std::vector<Measurement>& measurements, int n, int k, double t) {
     vector<Measurement> sampling = fast_sample<Measurement>(measurements, n);
     // compute model
     Model model = compute_model(sampling);
+    // model.print();
     // compute number of inliers
     int cur_inliers = 0;
     for(const Measurement &measurement : measurements)
@@ -55,7 +56,8 @@ Model ransac(std::vector<Measurement>& measurements, int n, int k, double t) {
       n_inliers = cur_inliers;
     }
     n_iterations = min(compute_iterations(.99, 1.*n_inliers/measurements.size(), n), k);
-    cout << n_iterations << endl;
+    n_iterations = max(n_iterations, 3);
+    // cout << n_iterations << " " << n_inliers << endl;
   }
 
   return best_model;

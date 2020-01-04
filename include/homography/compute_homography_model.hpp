@@ -6,5 +6,5 @@
 using namespace std;
 
 struct ComputeHomographyModel : public BaseComputeModel<HomographyModel, HomographyMeasurement>{
-  HomographyModel operator()(const vector<HomographyMeasurement>& m);
+  HomographyModel operator()(vector<HomographyMeasurement> m);
 };

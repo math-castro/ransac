@@ -20,5 +20,5 @@ Point2f HomographyModel::operator()(const Point2f& p) const {
 }
 
 void HomographyModel::print() const {
-  cout << _matrix/_matrix(2,2) << endl;
+  cout << _matrix << endl;
 }

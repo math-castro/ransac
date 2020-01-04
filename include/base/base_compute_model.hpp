@@ -5,5 +5,5 @@
 /*Base class for all ComputeModels*/
 template<class Model, class Measurement>
 class BaseComputeModel {
-    virtual Model operator()(const std::vector<Measurement>& measurements) = 0;
+    virtual Model operator()(std::vector<Measurement> measurements) = 0;
 };

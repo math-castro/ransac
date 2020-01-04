@@ -14,11 +14,12 @@ void random_measurements(Matrix3d& H, vector<Point2f>& src, vector<Point2f>& dst
   src.clear();
   dst.clear();
   H = Matrix3d::Random();
-  VectorXd x = VectorXd::Random(n);
-  VectorXd y = VectorXd::Random(n);
+  H /= H(2,2);
+  VectorXd x = 1000*VectorXd::Random(n);
+  VectorXd y = 1000*VectorXd::Random(n);
   for(int i = 0; i < n; i++) {
     Vector3d p(x(i), y(i), 1);
-    Vector3d pp = H*(p + Vector3d::Random()*0.01);
+    Vector3d pp = H*p+Vector3d(1.*rand()/RAND_MAX, 1.*rand()/RAND_MAX, 0);
     src.emplace_back(p.x()/p.z(), p.y()/p.z());
     dst.emplace_back(pp.x()/pp.z(), pp.y()/pp.z());
   }
@@ -67,7 +68,7 @@ int main() {
   start = chrono::high_resolution_clock::now();
   H = findHomography(src, dst, CV_RANSAC);
   finish = chrono::high_resolution_clock::now();
-  cout << "Real H:\n" << real_H/real_H(2,2) << endl;
+  cout << "Real H:\n" << real_H << endl;
   cout << "OpenCV's H: " << chrono::duration<double>(finish-start).count() << " s" << endl;
   cout << H << endl;
 
@@ -79,7 +80,7 @@ int main() {
 
   start = chrono::high_resolution_clock::now();
   auto my_H = ransac<HomographyModel, HomographyMeasurement, ComputeHomographyModel, ComputeHomographyError>
-  (measurements, 4, 1000, .1);
+  (measurements, 4, 1000, 3);
   finish = chrono::high_resolution_clock::now();
 
   cout << "Our H: " << chrono::duration<double>(finish-start).count() << " s" << endl;
