@@ -72,7 +72,7 @@ int main() {
   cout << H << endl;
 
   measurements.clear();
-  for(int i = 0; i < src.size(); i++) {
+  for(size_t i = 0; i < src.size(); i++) {
     measurements.emplace_back(src[i], dst[i]);
   }
 

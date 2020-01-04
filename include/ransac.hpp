@@ -6,6 +6,8 @@
 #include<exception>
 #include<iostream>
 
+#include "utils/fast_sample.hpp"
+
 /*
 *ComputeModel: should derive from BaseComputeModel with the same Model and Measurement
 *ComputeError: should derive from BaseComputeError with the same Model and Measurement
@@ -15,7 +17,7 @@
 */
 template <class Model, class Measurement, class ComputeModel,
           class ComputeError>
-Model ransac(const std::vector<Measurement>& measurements, int n, int k, double t) {
+Model ransac(std::vector<Measurement>& measurements, int n, int k, double t) {
   using namespace std;
 
   if(n > (int)measurements.size()) {
@@ -31,8 +33,7 @@ Model ransac(const std::vector<Measurement>& measurements, int n, int k, double 
 
   for(int i = 0; i < k; i++) {
     // create a sampling
-    vector<Measurement> sampling;
-    sample(measurements.begin(), measurements.end(), back_inserter(sampling), n, rng);
+    vector<Measurement> sampling = fast_sample<Measurement>(measurements, n);
     // compute model
     Model model = compute_model(sampling);
     // compute number of inliers
