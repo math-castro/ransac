@@ -79,8 +79,8 @@ int main() {
 
 
   start = chrono::high_resolution_clock::now();
-  auto my_H = ransac<HomographyModel, HomographyMeasurement, ComputeHomographyModel, ComputeHomographyError>
-  (measurements, 4, 1000, 3);
+  auto my_H = ransac<HomographyModel, HomographyMeasurement, ComputeHomographyModel, ComputeHomographyError, 4>
+  (measurements);
   finish = chrono::high_resolution_clock::now();
 
   cout << "Our H: " << chrono::duration<double>(finish-start).count() << " s" << endl;

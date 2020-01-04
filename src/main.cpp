@@ -66,8 +66,8 @@ int main(int argc, char** argv) {
         }
       }
 
-      H[i][j] = ransac<HomographyModel, HomographyMeasurement, ComputeHomographyModel, ComputeHomographyError>
-      (p[i][j], 4, 1000, 3);
+      H[i][j] = ransac<HomographyModel, HomographyMeasurement, ComputeHomographyModel, ComputeHomographyError, 4>
+      (p[i][j]);
     }
   }
 

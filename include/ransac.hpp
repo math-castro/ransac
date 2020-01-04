@@ -18,13 +18,14 @@ int compute_iterations(double p, double r, int s) {
 *ComputeModel: should derive from BaseComputeModel with the same Model and Measurement
 *ComputeError: should derive from BaseComputeError with the same Model and Measurement
 *n: number of measurements to estimate model
-*k: maximum number of iterations
-*t: threshold for inliers
 */
 template <class Model, class Measurement, class ComputeModel,
-          class ComputeError>
-Model ransac(std::vector<Measurement>& measurements, int n, int k, double t) {
+          class ComputeError, int n>
+Model ransac(std::vector<Measurement>& measurements) {
   using namespace std;
+
+  const int k = 1000; //maximum number of iterations
+  const double t = 3; //threshold for inliers
 
   if(n > (int)measurements.size()) {
     throw invalid_argument("The number of measurements cannot be smaller than n");
