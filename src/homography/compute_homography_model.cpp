@@ -98,7 +98,6 @@ HomographyModel ComputeHomographyModel::operator()(vector<HomographyMeasurement>
   H(1,2) = h(5);
   H(2,0) = h(6);
   H(2,1) = h(7);
-  // H(2,2) = h(8);
   H(2,2) = 1;
   
   H = Tpi*Spi*H*S*T;

@@ -8,6 +8,7 @@
 
 #include "utils/files.hpp"
 #include "homography/homography.hpp"
+#include "cilindrical/focal.hpp"
 
 using namespace std;
 using namespace cv;
@@ -28,14 +29,16 @@ int main(int argc, char** argv) {
 
   vector<HomographyModel> H = computeHomographies(I);
 
-  Mat K = Mat::zeros(2* I[0].rows, 3 * I[0].cols, CV_8U);
-  Mat H_cur = Mat::eye(3,3, CV_64F);
-  for (int i = 0; i < 5; i++) {
-    warpPerspective(I[i], K, H_cur, K.size(), INTER_LINEAR | WARP_INVERSE_MAP, BORDER_TRANSPARENT);
-    H_cur = H[i].toMat()*H_cur;
-  }
+  double focal = 4000;
 
-  imshow("panorama.jpg", K);
+  // Mat K = Mat::zeros(2* I[0].rows, 2 * I[0].cols, CV_8U);
+  // Mat H_cur = Mat::eye(3,3, CV_64F);
+  // H_cur.at<double>(1,2) = -.8*I[0].rows;
+  // for (int i = 0; i < 3; i++) {
+  //   warpPerspective(I[i], K, H_cur, K.size(), INTER_LINEAR | WARP_INVERSE_MAP, BORDER_TRANSPARENT);
+  //   H_cur = H[i].toMat()*H_cur;
+  // }
+  // imshow("panorama.jpg", K);
 
   waitKey(0);
 

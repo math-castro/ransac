@@ -2,9 +2,9 @@
 #include <chrono>
 #include <Eigen/Dense>
 
-#include "ransac.hpp"
 #include "homography/compute_homography_model.hpp"
 #include "homography/compute_homography_error.hpp"
+#include "ransac.hpp"
 
 using namespace std;
 using namespace Eigen;
