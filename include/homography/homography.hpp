@@ -1,6 +1,8 @@
 #pragma once
 
+#include <vector>
+#include <opencv2/opencv.hpp>
+
 #include "homography/homography_model.hpp"
-#include "homography/homography_measurement.hpp"
-#include "homography/compute_homography_model.hpp"
-#include "homography/compute_homography_error.hpp"
+
+std::vector<HomographyModel> computeHomographies(std::vector<cv::Mat>& I);

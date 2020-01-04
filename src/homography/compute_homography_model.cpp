@@ -4,35 +4,41 @@
 #include <Eigen/Eigenvalues>
 #include <Eigen/IterativeLinearSolvers>
 
+#include "homography/compute_homography_error.hpp"
+
 using namespace Eigen;
 using namespace cv;
 
 HomographyModel ComputeHomographyModel::operator()(vector<HomographyMeasurement> m) {
-  Matrix<double, 8, 8> A = Matrix<double, 8, 8>::Zero();
-  Matrix<double, 8, 1> b = Matrix<double, 8, 1>::Zero();
+  MatrixXd A = MatrixXd::Zero(2*m.size(), 8);
+  VectorXd b = VectorXd::Zero(2*m.size());
 
   // normalize the points
   double m_x=0, m_y=0, d=0;
   double m_xp=0, m_yp=0, dp=0;
 
   // calculate translation
-  for(int i = 0; i < 4; i++) {
+  for(size_t i = 0; i < m.size(); i++) {
     HomographyMeasurement& measurement = m[i];
     float &x = measurement.src.x, &y = measurement.src.y, &xp = measurement.dst.x, &yp = measurement.dst.y;
-    m_x += x/4;
-    m_y += y/4;
-    m_xp += xp/4;
-    m_yp += yp/4;
+    m_x += x;
+    m_y += y;
+    m_xp += xp;
+    m_yp += yp;
   }
+  m_x /= m.size(), m_y /= m.size(), m_xp /= m.size(), m_yp /= m.size();
+
   // calculate distance
-  for(int i = 0; i < 4; i++) {
+  for(size_t i = 0; i < m.size(); i++) {
     HomographyMeasurement& measurement = m[i];
     float &x = measurement.src.x, &y = measurement.src.y, &xp = measurement.dst.x, &yp = measurement.dst.y;
-    d += sqrt((x-m_x)*(x-m_x) + (y-m_y)*(y-m_y))/4/sqrt(2);
-    dp += sqrt((xp-m_xp)*(xp-m_xp) + (yp-m_yp)*(yp-m_yp))/4/sqrt(2);
+    d += sqrt((x-m_x)*(x-m_x) + (y-m_y)*(y-m_y));
+    dp += sqrt((xp-m_xp)*(xp-m_xp) + (yp-m_yp)*(yp-m_yp));
   }
+  d /= sqrt(2)*m.size(), dp /= sqrt(2)*m.size();
+
   // transform points
-  for(int i = 0; i < 4; i++) {
+  for(size_t i = 0; i < m.size(); i++) {
     HomographyMeasurement& measurement = m[i];
     float &x = measurement.src.x, &y = measurement.src.y, &xp = measurement.dst.x, &yp = measurement.dst.y;
     x = (x-m_x)/d; 
@@ -58,7 +64,7 @@ HomographyModel ComputeHomographyModel::operator()(vector<HomographyMeasurement>
   Spi(0,0) = Spi(1,1) = dp;
   Spi(2,2) = 1;
 
-  for(int i = 0; i < 4; i++) {
+  for(size_t i = 0; i < m.size(); i++) {
     const HomographyMeasurement& measurement = m[i];
     double x = measurement.src.x, y = measurement.src.y, xp = measurement.dst.x, yp = measurement.dst.y;
 
@@ -79,11 +85,7 @@ HomographyModel ComputeHomographyModel::operator()(vector<HomographyMeasurement>
     b(2*i) = xp;
     b(2*i+1) = yp;
   }
-  // MatrixXd ATA = A.transpose()*A;
-  // SelfAdjointEigenSolver<MatrixXd> solver(ATA);
-  // auto h = solver.eigenvectors().col(0);
-  FullPivLU<MatrixXd> solver(A);
-  // b = A.transpose()*b;
+  FullPivHouseholderQR<MatrixXd> solver(A);
   auto h = solver.solve(b);
 
   Matrix3d H;

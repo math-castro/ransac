@@ -20,5 +20,6 @@ vector<string> getFilePathsInFolder(const string &path) {
   vector<string> r;
   for (const auto& entry : filesystem::directory_iterator(path))
     if (entry.is_regular_file()) r.push_back(entry.path());
+  sort(r.begin(), r.end());
   return r;
 }

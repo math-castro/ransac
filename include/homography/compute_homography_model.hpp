@@ -1,7 +1,8 @@
 #pragma once
 
 #include "base/base_compute_model.hpp"
-#include "homography.hpp"
+#include "homography/homography_model.hpp"
+#include "homography/homography_measurement.hpp"
 
 using namespace std;
 

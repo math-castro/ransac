@@ -22,3 +22,15 @@ Point2f HomographyModel::operator()(const Point2f& p) const {
 void HomographyModel::print() const {
   cout << _matrix << endl;
 }
+
+HomographyModel HomographyModel::inverse() {
+  return HomographyModel(_matrix.inverse());
+}
+
+Mat HomographyModel::toMat() {
+  Mat H(3,3,CV_64F);
+  for(int i = 0; i < 3; i++)
+    for(int j = 0; j < 3; j++)
+      H.at<double>(i,j) = _matrix(i,j);
+  return H;
+}

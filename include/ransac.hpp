@@ -58,8 +58,12 @@ Model ransac(std::vector<Measurement>& measurements) {
     }
     n_iterations = min(compute_iterations(.99, 1.*n_inliers/measurements.size(), n), k);
     n_iterations = max(n_iterations, 3);
-    // cout << n_iterations << " " << n_inliers << endl;
   }
 
-  return best_model;
+  vector<Measurement> inliers;
+    for(const Measurement &measurement : measurements)
+      if(compute_error(best_model, measurement) < t)
+        inliers.emplace_back(measurement);
+
+  return compute_model(inliers);
 }
