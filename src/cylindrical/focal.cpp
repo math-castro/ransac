@@ -1,4 +1,4 @@
-#include "cilindrical/focal.hpp"
+#include "cylindrical/focal.hpp"
 
 #include <opencv2/stitching/detail/autocalib.hpp>
 #include <iostream>

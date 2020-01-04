@@ -9,8 +9,7 @@
 using namespace std;
 using namespace Eigen;
 
-void random_measurements(Matrix3d& H, vector<Point2f>& src, vector<Point2f>& dst) {
-  const int n = 1000;
+void random_measurements(Matrix3d& H, vector<Point2f>& src, vector<Point2f>& dst, int n) {
   src.clear();
   dst.clear();
   H = Matrix3d::Random();
@@ -63,28 +62,36 @@ int main() {
   cout << H << endl;
 
   Matrix3d real_H;
+  double opencv = 0, our = 0;
+  for(int i = 0; i < 1000; i++) {
+    random_measurements(real_H, src, dst, 10000);
+    start = chrono::high_resolution_clock::now();
+    H = findHomography(src, dst, CV_RANSAC);
+    finish = chrono::high_resolution_clock::now();
+    opencv += chrono::duration<double>(finish-start).count();
+    // cout << "Real H:\n" << real_H << endl;
+    // cout << "OpenCV's H: " << chrono::duration<double>(finish - start).count()
+        //  << " s" << endl;
+    // cout << H << endl;
 
-  random_measurements(real_H, src, dst);
-  start = chrono::high_resolution_clock::now();
-  H = findHomography(src, dst, CV_RANSAC);
-  finish = chrono::high_resolution_clock::now();
-  cout << "Real H:\n" << real_H << endl;
-  cout << "OpenCV's H: " << chrono::duration<double>(finish-start).count() << " s" << endl;
-  cout << H << endl;
+    measurements.clear();
+    for (size_t i = 0; i < src.size(); i++) {
+      measurements.emplace_back(src[i], dst[i]);
+    }
 
-  measurements.clear();
-  for(size_t i = 0; i < src.size(); i++) {
-    measurements.emplace_back(src[i], dst[i]);
+    start = chrono::high_resolution_clock::now();
+    auto my_H =
+        ransac<HomographyModel, HomographyMeasurement, ComputeHomographyModel,
+               ComputeHomographyError, 4>(measurements);
+    finish = chrono::high_resolution_clock::now();
+    our += chrono::duration<double>(finish-start).count();
+
+    // cout << "Our H: " << chrono::duration<double>(finish - start).count()
+        //  << " s" << endl;
+    // my_H.print();
   }
-
-
-  start = chrono::high_resolution_clock::now();
-  auto my_H = ransac<HomographyModel, HomographyMeasurement, ComputeHomographyModel, ComputeHomographyError, 4>
-  (measurements);
-  finish = chrono::high_resolution_clock::now();
-
-  cout << "Our H: " << chrono::duration<double>(finish-start).count() << " s" << endl;
-  my_H.print();
+  cout << "OpenCV's: " << opencv << " s" << endl;
+  cout << "Ours: " << our << " s" << endl;
 
   return EXIT_SUCCESS;
 }

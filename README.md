@@ -4,25 +4,16 @@ Implementation of a generic RANSAC (Random sample consensus) in C++ and of Image
 ## Dependencies
 - CMake
 - OpenCV
-- C++17
 
-<hr>
+## Running
+```
+mkdir build
+cd build
+cmake ..
+make
+./ransac
+./test
+```
 
-## TO-DO
-
-- RANSAC
-  - Change RANSAC's sample for an optimized implementation
-- Generic -> Specific:
-  - Implement homography classes: 
-    - [x] homography model,
-    - [x] pair measurement,
-    - [x] compute homography,
-    - [x] compute error of homography
-  - Implement linear classes: 
-    - linear model,
-    - point measurement,
-    - compute line,
-    - compute error from line
-- Image Stitching:
-  - How to match multiple images
-  - Convert homographies -> cylindrical projection
+`ransac` shows the stitching of 3 images
+`test` shows the performance comparison between OpenCV and our method.
