@@ -8,6 +8,12 @@
 
 #include "utils/fast_sample.hpp"
 
+int compute_iterations(double p, double r, int s) {
+  const int INF = 0x3f3f3f3f;
+  if(fabs(r) < 1e-9) return INF;
+  return log(1-p)/log(1-pow(r,s));
+}
+
 /*
 *ComputeModel: should derive from BaseComputeModel with the same Model and Measurement
 *ComputeError: should derive from BaseComputeError with the same Model and Measurement
@@ -30,8 +36,9 @@ Model ransac(std::vector<Measurement>& measurements, int n, int k, double t) {
 
   Model best_model;
   int n_inliers=0;
+  int n_iterations = min(compute_iterations(.99, 0, n), k);
 
-  for(int i = 0; i < k; i++) {
+  for(int i = 0; i < n_iterations; i++) {
     // create a sampling
     vector<Measurement> sampling = fast_sample<Measurement>(measurements, n);
     // compute model
@@ -47,8 +54,9 @@ Model ransac(std::vector<Measurement>& measurements, int n, int k, double t) {
       best_model = model;
       n_inliers = cur_inliers;
     }
+    n_iterations = min(compute_iterations(.99, 1.*n_inliers/measurements.size(), n), k);
+    cout << n_iterations << endl;
   }
-
 
   return best_model;
 }
